@@ -1,0 +1,9 @@
+{% extends "base_menu.html" %}
+{% block content %}
+  <h1>📋 Prévia do Relatório Diário</h1>
+  {% if has_data %}
+    <pre>{{ report }}</pre>
+  {% else %}
+    <p><strong>Nenhum documento pendente encontrado.</strong></p>
+  {% endif %}
+{% endblock %}

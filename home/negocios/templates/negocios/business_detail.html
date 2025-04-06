@@ -1,0 +1,64 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ business.business_text }}</title>
+</head>
+<body>
+    <h1>{{ business.business_text }}
+        <!-- Ссылки для редактирования и удаления бизнеса -->
+        {% if business.owner == user %}
+    <a href="{% url 'negocios:business_update' business.id %}"c><i class="fa fa-pencil"></i></a>
+    <a href="{% url 'negocios:business_delete' business.id %}"><i class="fa fa-trash"></i></a>
+    {% endif %}
+    </h1>
+
+
+
+    <p>Negocio Criado: {{ business.pub_date | date:"d/m/Y" }}</p>
+    <div class="d-flex justify-content-between">
+    <a href="{% url 'negocios:business_list' %}" class="btn btn-secondary">
+        ⬅️ Voltar aos Negócios
+    </a>
+    <a href="{% url 'negocios:download_all_files' business_id=business.id %}" class="btn btn-success">
+        📥 Baixar Todos os Arquivos
+    </a>
+</div>
+<hr>
+
+    <!-- Список документов -->
+    <h2>Documentos</h2>
+      <a href="{% url 'negocios:document_create' %}?business_id={{ business.id }}"class= "btn btn-primary">Adiconar Documento</a>
+    <ul>
+    {% for document in documents %}
+        <li>
+            <a href="{% url 'negocios:document_detail' document.id %}"
+               style="color: {% if document.status == 'approved' %}green{% else %}{% endif %};">
+               <strong>{{ document.document_text }}</strong>
+            </a>
+            ({{ document.pub_date | date:"d/m/Y" }})
+            {% if document.owner == user %}
+            <a href="{% url 'negocios:document_update' document.id %}"><i class="fa fa-pencil"></i></a>
+            <a href="{% url 'negocios:document_delete' document.id %}"><i class="fa fa-trash"></i></a>
+            {% endif %}
+
+            <ul>
+                {% for file in document.files.all %}
+                    <li>
+                        <a href="{{ file.file.url }}" download>{{ file.file.name }}</a>
+                    </li>
+                {% empty %}
+                    <li>Nao tem arquivos</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% empty %}
+        <li>No documents available.</li>
+    {% endfor %}
+</ul>
+</body>
+{% endif %}
+{% endblock %}

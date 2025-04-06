@@ -1,0 +1,36 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if object %}
+            Update {{ object.business_text }}
+        {% else %}
+            Create New Business
+        {% endif %}
+    </title>
+</head>
+<body>
+    <h1>
+        {% if object %}
+            Update {{ object.business_text }}
+        {% else %}
+            Criar Novo Negócio
+
+        {% endif %}
+        <br>
+        <a href="{% url 'negocios:business_list' %}" class="btn btn-secondary">⬅️ Voltar para os Negócios</a>
+    </h1>
+    {% load crispy_forms_tags %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary" >Salvar</button>
+    </form>
+
+</body>
+{% endif %}
+{% endblock %}

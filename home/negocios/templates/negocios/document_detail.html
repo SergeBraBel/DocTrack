@@ -1,0 +1,147 @@
+{% extends "base_menu.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do documento</title>
+</head>
+<body>
+    <h1>Documento: {{ object.document_text }}</h1>
+
+<!-- Responsável por Upload -->
+<p>
+    <strong>Responsável por Upload:</strong>
+    {% if object.upload_responsible %}
+        {{ object.upload_responsible.username }}
+    {% else %}
+        Não atribuído
+    {% endif %}
+
+    {% if object.owner == user %}
+        <a href="#" onclick="toggleForm('uploadForm')" class="ml-2"><i class="fa fa-pencil"></i></a>
+    {% endif %}
+</p>
+
+{% if object.owner == user %}
+    <form method="post" action="{% url 'negocios:document_assign_upload_responsible' object.id %}" id="uploadForm" style="display: none;">
+        {% csrf_token %}
+        <select name="upload_responsible" class="form-control">
+            {% for u in users %}
+                <option value="{{ u.id }}" {% if object.upload_responsible == u %}selected{% endif %}>{{ u.username }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+    </form>
+{% endif %}
+
+
+<!-- Responsável por Aprovação -->
+<p>
+    <strong>Responsável por Aprovação:</strong>
+    {% if object.approval_responsible %}
+        {{ object.approval_responsible.username }}
+    {% else %}
+        Não atribuído
+    {% endif %}
+
+    {% if object.owner == user %}
+        <a href="#" onclick="toggleForm('approvalForm')" class="ml-2"><i class="fa fa-pencil"></i></a>
+    {% endif %}
+</p>
+
+{% if object.owner == user %}
+    <form method="post" action="{% url 'negocios:document_assign_approval_responsible' object.id %}" id="approvalForm" style="display: none;">
+        {% csrf_token %}
+        <select name="approval_responsible" class="form-control">
+            {% for u in users %}
+                <option value="{{ u.id }}" {% if object.approval_responsible == u %}selected{% endif %}>{{ u.username }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+    </form>
+{% endif %}
+
+<!-- JS для показа/скрытия формы -->
+<script>
+function toggleForm(formId) {
+    var form = document.getElementById(formId);
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
+}
+</script>
+
+
+    <p><strong>Status:</strong> {{ object.get_status_display }}</p>
+    <p><strong>Documento Criado:</strong> {{ object.pub_date|date:"d/m/Y" }} ( Há  {{ days_since_creation }} )dias</p>
+<!--    <p><strong>Responsável por Upload:</strong> {{ object.upload_responsible.get_full_name|default:"Não atribuído" }}</p>-->
+<!--    <p><strong>Responsável por Aprovação:</strong> {{ object.approval_responsible.get_full_name|default:"Não atribuído" }}</p>-->
+
+<!--    Aprovação do documento-->
+
+<!-- Кнопки для изменения статуса документа -->
+{% if object.approval_responsible is None or object.approval_responsible == user %}
+    <form method="post" action="{% url 'negocios:document_status_update' object.id %}">
+        {% csrf_token %}
+
+        {% if object.status == "approved" %}
+            <button type="submit" name="status" value="pending" class="btn btn-warning">Desaprovar</button>
+        {% else %}
+            <button type="submit" name="status" value="approved" class="btn btn-success">Aprovar</button>
+        {% endif %}
+    </form>
+{% endif %}
+     <hr>
+<a href="{% url 'negocios:business_detail' pk=object.business.pk %}" class="btn btn-secondary">⬅️ Voltar para negócio</a>
+    <h2> Arquivos: </h2>
+    {% if files %}
+        <ul>
+            {% for file in document.files.all %}
+                <li>
+                    <a href="{{ file.file.url }}" target="_blank">{{ file.file.name }}</a>
+                    <small>(Carregado em: {{ file.pub_date|date:"d/m/Y H:i" }})</small>
+                    {% if file.owner == user %}
+                    <a href="{% url 'negocios:document_file_update' pk=file.pk %}"><i class="fa fa-pencil"></i></a>
+                    <a href="{% url 'negocios:document_file_delete' pk=file.pk %}"><i class="fa fa-trash"></i></a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum arquivo carregado ainda.</p>
+    {% endif %}
+
+    <a href="{% url 'negocios:document_file_upload' pk=object.pk %}" class="btn btn-primary">
+        Adicionar Arquivo
+    </a>
+</p>
+<br clear="all"/>
+<p>
+{% load crispy_forms_tags %}
+<form method="post" action="{% url 'negocios:document_comment_create' document.id %}">
+    {% csrf_token %}
+    {{ comment_form|crispy }}
+<button type="submit" class="btn btn-primary">
+    <i class="fas fa-paper-plane"></i>
+</button>
+</form>
+</p>
+{% for comment in comments %}
+<p> {{ comment.text }} - <i class="fas fa-user"></i> {{ comment.owner.username }}
+    ({{ comment.updated_at|date:"d/m/Y" }})
+{% if user == comment.owner %}
+<a href="{% url 'negocios:document_comment_delete' comment.id %}"><i class="fa fa-trash"></i></a>
+{% endif %}
+</p>
+{% endfor %}
+<h2> Arquivos: </h2>
+<p>Total de arquivos: {{ files|length }}</p>
+{% for file in files %}
+    <p>{{ file.file.url }}</p>
+{% endfor %}
+</body>
+{% endif %}
+{% endblock %}

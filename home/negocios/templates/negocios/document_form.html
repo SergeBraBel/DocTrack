@@ -1,0 +1,26 @@
+{% extends "base_menu.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar novo documento</title>
+
+</head>
+<body>
+    <h1>Pagina do Documento</h1>
+    {% load crispy_forms_tags %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+       <div>
+         {{ form|crispy }}  <!-- Форма для документа -->
+            </div>
+       {{ formset.management_form }}  <!-- Управление formset -->
+        <button type="submit"  class="btn btn-primary">Salvar</button>
+        <a href="{% url 'negocios:business_list' %}"  class="btn btn-secondary">Cancelar</a>
+
+    </form>
+
+</body>
+{% endif %}
+{% endblock %}

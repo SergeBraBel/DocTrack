@@ -1,0 +1,26 @@
+{% extends "base_menu.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Confirmar Excluir </title>
+</head>
+<body>
+    <h1>Excluir arquivo</h1>
+     <a href="{% url 'negocios:document_detail' pk=object.document.pk %}"  class="btn btn-secondary">⬅️ Voltar ao documento</a>
+
+    <p>Tem certeza de que deseja excluir este arquivo?</p>
+
+    <p><strong>Arquivo:</strong> {{ object.file.name }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" > Sim, Excluir </button>
+    </form>
+
+
+
+</body>
+{% endif %}
+{% endblock %}

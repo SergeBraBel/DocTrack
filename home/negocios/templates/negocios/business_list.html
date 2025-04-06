@@ -1,0 +1,35 @@
+{% extends "base_menu.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <title>Lista de Тegócios</title>
+</head>
+<body>
+    <h1>Lista de negócios</h1>
+    <a href="{% url 'negocios:business_create' %}" class="btn btn-primary">Criar negócio sem documentos</a>
+    <a href="{% url 'negocios:business_create_produtor' %}" class="btn btn-primary">Criar negócio Produtor</a>
+    <a href="{% url 'negocios:business_create_empresa' %}" class="btn btn-primary">Criar negócio Empresa</a>
+    <br><br>
+    <ul>
+        {% for business in businesses %}
+            <li>
+                <a href="{% url 'negocios:business_detail' business.id %}">{{ business.business_text }}</a> Criado em -
+                {{ business.pub_date|date:"d/m/Y" }} por  {{ business.owner.username }}
+
+                {% if business.owner == user %}
+                <a href="{% url 'negocios:business_update' business.id %}" ><i class="fa fa-pencil"></i></a>
+                <a href="{% url 'negocios:business_delete' business.id %}" ><i class="fa fa-trash"></i> </a></a>
+                 {% endif %}
+                <br><br>
+            </li>
+        {% empty %}
+            <li>Nenhum negócio disponível</li>
+        {% endfor %}
+    </ul>
+</body>
+{% else %}
+<p>You are not logged in</p>
+<p>You can <a href="{% url 'login' %}?next={{ request.path }}">Login</a> if you like.</p>
+{% endif %}
+
+{% endblock %}
