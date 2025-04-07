@@ -137,11 +137,7 @@ function toggleForm(formId) {
 {% endif %}
 </p>
 {% endfor %}
-<h2> Arquivos: </h2>
-<p>Total de arquivos: {{ files|length }}</p>
-{% for file in files %}
-    <p>{{ file.file.url }}</p>
-{% endfor %}
+
 </body>
 {% endif %}
 {% endblock %}
