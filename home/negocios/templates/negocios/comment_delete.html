@@ -1,13 +1,24 @@
-{% extends "base_bootstrap.html" %}
+{% extends "base_menu.html" %}
 {% block content %}
-<h1>Delete Comment</h1>
+<div class="container mt-5">
 
-<p>Are you sure you want to delete</p>
-<p>{{ comment.text }}?</p>
+  <div class="card shadow-sm">
+    <div class="card-header bg-danger text-white">
+      ⚠️ Confirmar Exclusão
+    </div>
+    <div class="card-body">
+      <p class="mb-3">Tem certeza de que deseja excluir o seguinte comentário?</p>
+      <blockquote class="blockquote">
+        <p class="mb-0">"{{ comment.text }}"</p>
+      </blockquote>
 
-<form action="" method="POST">
-  {% csrf_token %}
-  <input type="submit"  class="btn btn-primary" value="Yes, delete.">
-  <a href="{% url 'negocios:document_detail' comment.document.id %}" class="btn btn-secondary">Cancel</a>
-</form>
+      <form action="" method="POST" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">🗑️ Sim, excluir</button>
+        <a href="{% url 'negocios:document_detail' comment.document.id %}" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

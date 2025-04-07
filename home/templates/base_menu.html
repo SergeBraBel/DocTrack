@@ -1,50 +1,62 @@
 {% extends 'base_bootstrap.html' %}
-{% load app_tags %} <!-- see home/templatetags/app_tags.py and dj4e-samples/settings.py -->
+{% load app_tags %}
+
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-radius:10px !important">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm rounded-3 px-3 py-2">
   <div class="container-fluid">
-    <!-- Логотип / Название приложения -->
-    <a class="navbar-brand" href="{% url 'negocios:business_list' %}">{{ settings.APP_NAME }}</a>
+    <!-- Логотип -->
+    <a class="navbar-brand fw-bold text-uppercase" href="{% url 'negocios:business_list' %}">
+      {{ settings.APP_NAME }}
+    </a>
 
-    <!-- Левая часть меню -->
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      {% url 'negocios:business_list' as business_url %}
-      {% url 'negocios:report_preview' as report_url %}
+    <!-- Кнопка для мобильного меню -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <li class="{% if request.path == business_url %}active{% endif %}">
-        <a class="nav-link" href="{{ business_url }}">Lista de negócios</a>
-      </li>
+    <!-- Основной блок меню -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <!-- Левая часть -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% url 'negocios:business_list' as business_url %}
+        {% url 'negocios:report_preview' as report_url %}
 
-      <li class="{% if request.path == report_url %}active{% endif %}">
-        <a class="nav-link" href="{{ report_url }}">Relatório Diário de Documentos Pendentes</a>
-      </li>
-    </ul>
-
-    <!-- Правая часть меню -->
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
-      {% if user.is_authenticated %}
-        <!-- Имя пользователя с иконкой -->
         <li class="nav-item">
-          <span class="navbar-text text-white me-2">
-            <i class="fas fa-user"></i> {{ user.username }}
-          </span>
-        </li>
-
-        <!-- Аватар и выпадающее меню -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="rightnavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <img style="width: 25px;" src="{{ user|gravatar:60 }}"/><b class="caret"></b>
+          <a class="nav-link {% if request.path == business_url %}active fw-semibold{% endif %}" href="{{ business_url }}">
+            Lista de Negócios
           </a>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="rightnavDropdown">
-            <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'negocios:business_list' %}">Logout</a></li>
-          </ul>
         </li>
-      {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'login' %}?next={% url 'negocios:business_list' %}">Login</a>
+          <a class="nav-link {% if request.path == report_url %}active fw-semibold{% endif %}" href="{{ report_url }}">
+            Documentos Pendentes
+          </a>
         </li>
-      {% endif %}
-    </ul>
+      </ul>
+
+      <!-- Правая часть -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-circle me-2"></i> {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="{% url 'logout' %}?next={% url 'negocios:business_list' %}">
+                  <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}?next={% url 'negocios:business_list' %}">Login</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 </nav>
 {% endblock %}
+

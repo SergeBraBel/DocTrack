@@ -1,26 +1,31 @@
 {% extends "base_menu.html" %}
 {% block content %}
 {% if user.is_authenticated %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Confirmar Excluir </title>
-</head>
-<body>
-    <h1>Excluir arquivo</h1>
-     <a href="{% url 'negocios:document_detail' pk=object.document.pk %}"  class="btn btn-secondary">⬅️ Voltar ao documento</a>
 
-    <p>Tem certeza de que deseja excluir este arquivo?</p>
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4 border-danger">
+        <div class="card-header bg-danger text-white rounded-top-4 d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Excluir Arquivo</h3>
+            <a href="{% url 'negocios:document_detail' pk=object.document.pk %}" class="btn btn-light btn-sm">
+                ⬅️ Voltar ao documento
+            </a>
+        </div>
+        <div class="card-body">
 
-    <p><strong>Arquivo:</strong> {{ object.file.name }}</p>
+            <p class="fs-5">Tem certeza de que deseja <strong class="text-danger">excluir</strong> este arquivo?</p>
 
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger" > Sim, Excluir </button>
-    </form>
+            <p><strong>Arquivo:</strong> {{ object.file.name }}</p>
 
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="fa fa-trash"></i> Sim, Excluir
+                </button>
+            </form>
 
+        </div>
+    </div>
+</div>
 
-</body>
 {% endif %}
 {% endblock %}

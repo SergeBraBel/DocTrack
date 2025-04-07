@@ -1,15 +1,28 @@
 {% extends "base_menu.html" %}
 
 {% block content %}
-  <div class="container">
-    <h1>Delete Business</h1>
-    <p>Are you sure you want to delete the business <strong>{{ business.business_text }}</strong>?</p>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-danger text-white">
+      ⚠️ Confirmar Exclusão de Negócio
+    </div>
+    <div class="card-body">
+      <p class="mb-3">
+        Tem certeza de que deseja excluir o negócio
+        <strong>{{ business.business_text }}</strong>?
+      </p>
 
-    <form method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Delete</button>
-      <a href="{% url 'negocios:business_detail' business.id %}" class="btn btn-secondary">Cancel</a>
-    </form>
+      <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+          🗑️ Excluir
+        </button>
+        <a href="{% url 'negocios:business_detail' business.id %}" class="btn btn-secondary">
+          Cancelar
+        </a>
+      </form>
+    </div>
   </div>
+</div>
 {% endblock %}
 

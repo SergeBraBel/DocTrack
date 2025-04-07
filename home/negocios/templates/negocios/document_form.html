@@ -1,26 +1,32 @@
 {% extends "base_menu.html" %}
 {% block content %}
 {% if user.is_authenticated %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar novo documento</title>
 
-</head>
-<body>
-    <h1>Pagina do Documento</h1>
-    {% load crispy_forms_tags %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-       <div>
-         {{ form|crispy }}  <!-- Форма для документа -->
-            </div>
-       {{ formset.management_form }}  <!-- Управление formset -->
-        <button type="submit"  class="btn btn-primary">Salvar</button>
-        <a href="{% url 'negocios:business_list' %}"  class="btn btn-secondary">Cancelar</a>
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h3 class="mb-0">Criar Novo Documento</h3>
+        </div>
+        <div class="card-body">
+            {% load crispy_forms_tags %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
 
-    </form>
+                {{ formset.management_form }}
 
-</body>
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-save"></i> Salvar
+                    </button>
+                    <a href="{% url 'negocios:business_list' %}" class="btn btn-secondary">
+                        <i class="fa fa-times-circle"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endif %}
 {% endblock %}

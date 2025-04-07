@@ -1,9 +1,21 @@
 {% extends "base_menu.html" %}
 {% block content %}
-  <h1>📋 Prévia do Relatório Diário</h1>
-  {% if has_data %}
-    <pre>{{ report }}</pre>
-  {% else %}
-    <p><strong>Nenhum documento pendente encontrado.</strong></p>
-  {% endif %}
+<div class="container mt-4">
+  <div class="card shadow-sm rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0">📋 Prévia do Relatório Diário</h4>
+    </div>
+    <div class="card-body">
+      {% if has_data %}
+        <pre class="bg-light p-3 rounded" style="white-space: pre-wrap; font-family: monospace; font-size: 0.95rem;">
+{{ report }}
+        </pre>
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          <strong>Nenhum documento pendente encontrado.</strong>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

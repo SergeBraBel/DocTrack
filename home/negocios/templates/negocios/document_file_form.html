@@ -1,26 +1,28 @@
 {% extends "base_menu.html" %}
 {% block content %}
 {% if user.is_authenticated %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar arquivo ao documento</title>
-</head>
 
-<body>
-    <h1>Adicionar arquivo ao documento</h1>
-    <a href="{% url 'negocios:document_detail' pk=document.pk %}" class="btn btn-secondary"> ⬅️ Voltar ao documento</a>
-    <br><br>
-    {% load crispy_forms_tags %}
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary" >Carregar</button>
-    </form>
+<div class="container mt-5">
+    <div class="card shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Adicionar Arquivo</h3>
+            <a href="{% url 'negocios:document_detail' pk=document.pk %}" class="btn btn-light btn-sm">
+                ⬅️ Voltar ao Documento
+            </a>
+        </div>
+        <div class="card-body">
+            {% load crispy_forms_tags %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="fa fa-upload"></i> Carregar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
-<!--    <a href="{% url 'negocios:document_detail' pk=view.kwargs.pk %}">Back to Document</a>-->
-
-
-</body>
 {% endif %}
 {% endblock %}
+

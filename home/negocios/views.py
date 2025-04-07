@@ -98,6 +98,9 @@ class DocumentDetailView(OwnerDetailView):
         DocumentFileFormSet = inlineformset_factory(Document, DocumentFile, form=DocumentFileForm, extra=1)
         context['formset'] = DocumentFileFormSet(self.request.POST, self.request.FILES)
         document = self.object
+        # Расчёт количества дней
+        delta = now().date() - document.pub_date.date()
+        context['days_since_creation'] = delta.days
         # Добавляем комментарии
         context['comments'] = Comment.objects.filter(document=self.object).order_by('-updated_at')
         context['comment_form'] = CommentForm()
