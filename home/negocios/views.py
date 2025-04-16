@@ -26,6 +26,18 @@ class BusinessListView(OwnerListView):
     def get_queryset(self):
         # Сортировка бизнесов по дате в обратном порядке
         return Business.objects.all().order_by('-pub_date')  # Используем `-` для обратного порядка
+    def post(self, request, *args, **kwargs):
+        business_id = request.POST.get('business_id')
+        business = get_object_or_404(Business, id=business_id)
+
+        # Переключаем статус
+        if business.status == 'collecting':
+            business.status = 'finalized'
+        else:
+            business.status = 'collecting'
+        business.save()
+
+        return redirect('negocios:business_list')
 
 
 

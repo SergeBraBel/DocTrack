@@ -1,7 +1,7 @@
 from negocios.models import Business, Document, Comment
 
 def generate_report_body():
-    businesses = Business.objects.all()
+    businesses = Business.objects.filter(status='collecting') # Только бизнесы в статусе "coletando"
     email_body = "   quando o aplicativo for implementado o email vai ser enviado diariamente deste jeito\n Bom dia!\n \nSegue lista de documentos pendentes:\n\n"
     has_pending_documents = False
 

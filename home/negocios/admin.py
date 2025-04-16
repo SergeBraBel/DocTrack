@@ -1,5 +1,10 @@
 from django.contrib import admin
-from .models import Business, Document, DocumentFile
+from .models import Business, Document, DocumentFile, ReportRecipient
+
+@admin.register(ReportRecipient)
+class ReportRecipientAdmin(admin.ModelAdmin):
+    list_display = ('email',)
+    search_fields = ('email',)
 
 class DocumentFileInline(admin.TabularInline):  # или admin.StackedInline
     model = DocumentFile

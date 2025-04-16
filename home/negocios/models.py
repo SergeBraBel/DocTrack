@@ -12,9 +12,14 @@ class ReportRecipient(models.Model):
     def __str__(self):
         return self.email
 class Business(models.Model):
+    STATUS_CHOICES = [
+        ('collecting', 'Coletando documentos'),
+        ('finalized', 'Finalizado'),
+    ]
     business_text = models.CharField(max_length=200, unique=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='businesses_owned')
     pub_date = models.DateTimeField("date published", default=timezone.now)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='collecting')
 
     def __str__(self):
         return self.business_text

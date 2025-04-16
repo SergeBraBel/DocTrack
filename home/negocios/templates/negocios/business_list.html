@@ -8,38 +8,51 @@
 
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
         <a href="{% url 'negocios:business_create' %}" class="btn btn-primary">Criar negócio sem documentos</a>
-        <a href="{% url 'negocios:business_create_produtor' %}" class="btn btn-outline-primary">Criar negócio Produtor</a>
+        <a href="{% url 'negocios:business_create_produtor' %}" class="btn btn-outline-primary">Criar negócio
+            Produtor</a>
         <a href="{% url 'negocios:business_create_empresa' %}" class="btn btn-outline-primary">Criar negócio Empresa</a>
     </div>
 
     {% if businesses %}
-        <div class="list-group">
-            {% for business in businesses %}
-                <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap shadow-sm rounded mb-2">
-                    <div>
-                        <a href="{% url 'negocios:business_detail' business.id %}" class="fw-bold">
-                            {{ business.business_text }}
-                        </a><br>
-                        <small class="text-muted">
-                            Criado em {{ business.pub_date|date:"d/m/Y" }} por {{ business.owner.username }}
-                        </small>
-                    </div>
+    <div class="list-group">
+        {% for business in businesses %}
+        <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap shadow-sm rounded mb-2">
+            <div>
+                <a href="{% url 'negocios:business_detail' business.id %}" class="fw-bold">
+                    {{ business.business_text }}
+                </a><br>
+                <small class="text-muted">
+                    Criado em {{ business.pub_date|date:"d/m/Y" }} por {{ business.owner.username }}
+                </small>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+                {% if business.owner == user %}
+                <a href="{% url 'negocios:business_update' business.id %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="fa fa-pencil"></i>
+                </a>
+                <a href="{% url 'negocios:business_delete' business.id %}" class="btn btn-sm btn-outline-danger">
+                    <i class="fa fa-trash"></i>
+                </a>
+                {% endif %}
 
-                    {% if business.owner == user %}
-                    <div>
-                        <a href="{% url 'negocios:business_update' business.id %}" class="btn btn-sm btn-outline-secondary me-1">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a href="{% url 'negocios:business_delete' business.id %}" class="btn btn-sm btn-outline-danger">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="business_id" value="{{ business.id }}">
+                    <button type="submit"
+                            class="btn btn-sm {% if business.status == 'collecting' %}btn-outline-info{% else %}btn-outline-success{% endif %}">
+                        {% if business.status == 'collecting' %}
+                        📥 Coletando
+                        {% else %}
+                        ✅ Finalizado
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p class="text-muted text-center">Nenhum negócio disponível.</p>
+    <p class="text-muted text-center">Nenhum negócio disponível.</p>
     {% endif %}
 </div>
 
